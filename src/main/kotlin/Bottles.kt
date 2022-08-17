@@ -9,7 +9,7 @@ class Bottles {
 
     private fun verse(number: Int): String {
         val bottleNumber = BottleNumber.bottleNumberFor(number)
-        val successorBottleNumber = BottleNumber.bottleNumberFor(bottleNumber.successor())
+        val successorBottleNumber = bottleNumber.successor()
         return capitalize("$bottleNumber of beer on the wall, ") +
                 "$bottleNumber of beer.\n" +
                 "${bottleNumber.action()}, " +
@@ -24,7 +24,7 @@ class Bottles {
 private class BottleNumber0(number: Int) : BottleNumber(number) {
     override fun quantity() = "no more"
     override fun action() = "Go to the store and buy some more"
-    override fun successor() = 99
+    override fun successor() = bottleNumberFor(99)
 }
 
 private class BottleNumber1(number: Int) : BottleNumber(number) {
@@ -42,7 +42,7 @@ private open class BottleNumber(private val number: Int) {
     open fun pronoun() = "one"
     open fun quantity() = number.toString()
     open fun action() = "Take ${pronoun()} down and pass it around"
-    open fun successor() = number - 1
+    open fun successor() = bottleNumberFor(number - 1)
 
     companion object {
         fun bottleNumberFor(number: Int): BottleNumber {
