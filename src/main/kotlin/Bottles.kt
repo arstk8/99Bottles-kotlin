@@ -50,14 +50,32 @@ private open class BottleNumber(private val number: Int) {
     open fun successor() = bottleNumberFor(number - 1)
 
     companion object {
-        fun bottleNumberFor(number: Int): BottleNumber {
-            val bottleNumberClass = mapOf(
-                0 to BottleNumber0::class.java,
-                1 to BottleNumber1::class.java,
-                6 to BottleNumber6::class.java
-            )[number] ?: BottleNumber::class.java
+        private enum class BottleNumberRegistry {
+            BOTTLE0 {
+                override fun getInstance(number: Int) = BottleNumber0(number)
+                override fun canHandle(number: Int) = number == 0
+            },
+            BOTTLE1 {
+                override fun getInstance(number: Int) = BottleNumber1(number)
+                override fun canHandle(number: Int) = number == 1
+            },
+            BOTTLE6 {
+                override fun getInstance(number: Int) = BottleNumber6(number)
+                override fun canHandle(number: Int) = number == 6
+            },
+            OTHER {
+                override fun getInstance(number: Int) = BottleNumber(number)
+                override fun canHandle(number: Int) = true
+            };
 
-            return bottleNumberClass.getConstructor(Int::class.java).newInstance(number) as BottleNumber
+            abstract fun getInstance(number: Int): BottleNumber
+            abstract fun canHandle(number: Int): Boolean
+        }
+
+        fun bottleNumberFor(number: Int): BottleNumber {
+            return BottleNumberRegistry.values()
+                .first { candidate -> candidate.canHandle(number) }
+                .getInstance(number)
         }
     }
 }
