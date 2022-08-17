@@ -43,7 +43,7 @@ private open class BottleNumber(private val number: Int) {
         return "${quantity()} ${container()}"
     }
 
-    open fun container()= "bottles"
+    open fun container() = "bottles"
     open fun pronoun() = "one"
     open fun quantity() = number.toString()
     open fun action() = "Take ${pronoun()} down and pass it around"
@@ -51,15 +51,13 @@ private open class BottleNumber(private val number: Int) {
 
     companion object {
         fun bottleNumberFor(number: Int): BottleNumber {
-            return if (number == 0) {
-                BottleNumber0(number)
-            } else if (number == 1) {
-                BottleNumber1(number)
-            } else if (number == 6) {
-                BottleNumber6(number)
-            } else {
-                BottleNumber(number)
-            }
+            val bottleNumberClass = mapOf(
+                0 to BottleNumber0::class.java,
+                1 to BottleNumber1::class.java,
+                6 to BottleNumber6::class.java
+            )[number] ?: BottleNumber::class.java
+
+            return bottleNumberClass.getConstructor(Int::class.java).newInstance(number) as BottleNumber
         }
     }
 }
