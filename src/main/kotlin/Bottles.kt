@@ -8,13 +8,21 @@ class Bottles {
     }
 
     private fun verse(number: Int): String {
-        return "${capitalize(quantity(number))} ${container(number)} of beer on the wall, " +
-                "${quantity(number)} ${container(number)} of beer.\n" +
-                "${action(number)}, " +
-                "${quantity(successor(number))} ${container(successor(number))} of beer on the wall."
+        val bottleNumber = BottleNumber(number)
+        val successorBottleNumber = BottleNumber(bottleNumber.successor())
+        return "${capitalize(bottleNumber.quantity())} ${bottleNumber.container()} of beer on the wall, " +
+                "${bottleNumber.quantity()} ${bottleNumber.container()} of beer.\n" +
+                "${bottleNumber.action()}, " +
+                "${successorBottleNumber.quantity()} ${successorBottleNumber.container()} of beer on the wall."
     }
 
-    private fun container(number: Int): String {
+    private fun capitalize(phrase: String): String {
+        return phrase[0].uppercase() + phrase.substring(1)
+    }
+}
+
+private class BottleNumber(private val number: Int) {
+    fun container(): String {
         return if (number == 1) {
             "bottle"
         } else {
@@ -22,7 +30,7 @@ class Bottles {
         }
     }
 
-    private fun pronoun(number: Int): String {
+    fun pronoun(): String {
         return if (number == 1) {
             "it"
         } else {
@@ -30,7 +38,7 @@ class Bottles {
         }
     }
 
-    private fun quantity(number: Int): String {
+    fun quantity(): String {
         return if (number == 0) {
             "no more"
         } else {
@@ -38,23 +46,19 @@ class Bottles {
         }
     }
 
-    private fun action(number: Int): String {
+    fun action(): String {
         return if (number == 0) {
             "Go to the store and buy some more"
         } else {
-            "Take ${pronoun(number)} down and pass it around"
+            "Take ${pronoun()} down and pass it around"
         }
     }
 
-    private fun successor(number: Int): Int {
+    fun successor(): Int {
         return if (number == 0) {
             99
         } else {
             number - 1
         }
-    }
-
-    private fun capitalize(phrase: String): String {
-        return phrase[0].uppercase() + phrase.substring(1)
     }
 }
