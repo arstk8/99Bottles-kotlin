@@ -3,52 +3,62 @@ class Bottles {
         return verses(99, 0)
     }
 
-    private fun verses(hi: Int, lo: Int): String {
-        return hi.downTo(lo).joinToString("\n") { verseNumber -> verse(verseNumber) }
+    private fun verses(bottlesAtStart: Int, bottlesAtEnd: Int): String {
+        return bottlesAtStart.downTo(bottlesAtEnd).joinToString("\n") { verseNumber -> verse(verseNumber) }
     }
 
-    private fun verse(n: Int): String {
-        return verseFor(n).text()
-    }
-
-    private fun verseFor(n: Int): Verse {
-        return when (n) {
-            0 -> Verse(n, this::noMore)
-            1 -> Verse(n, this::lastOne)
-            2 -> Verse(n, this::penultimate)
-            else -> Verse(n, this::default)
-        }
-    }
-
-    private fun noMore(verse: Verse): String {
-        return "No more bottles of beer on the wall, " +
-                "no more bottles of beer.\n" +
-                "Go to the store and buy some more, " +
-                "99 bottles of beer on the wall."
-    }
-
-    private fun lastOne(verse: Verse): String {
-        return "1 bottle of beer on the wall, " +
-                "1 bottle of beer.\n" +
-                "Take it down and pass it around, " +
-                "no more bottles of beer on the wall."
-    }
-
-    private fun penultimate(verse: Verse): String {
-        return "2 bottles of beer on the wall, " +
-                "2 bottles of beer.\n" +
-                "Take one down and pass it around, " +
-                "1 bottle of beer on the wall."
-    }
-
-    private fun default(verse: Verse): String {
-        return "${verse.number} bottles of beer on the wall, " + "${verse.number} bottles of beer.\n" +
-                "Take one down and pass it around, " + "${verse.number - 1} bottles of beer on the wall.";
+    private fun verse(bottles: Int): String {
+        return Round(bottles).toString()
     }
 }
 
-class Verse(val number: Int, private val lyrics: (verse: Verse) -> String) {
-    fun text(): String {
-        return lyrics(this)
+class Round(private var bottles: Int) {
+    override fun toString(): String {
+        return challenge() + response()
+    }
+
+    private fun challenge(): String {
+        return capitalize(bottlesOfBeer()) + " " + onWall() + ", " + bottlesOfBeer() + ".\n"
+    }
+
+    private fun response(): String {
+        return goToTheStoreOrTakeOneDown() + ", " + bottlesOfBeer() + " " + onWall() + "."
+    }
+
+    private fun bottlesOfBeer(): String {
+        return anglicizedBottleCount() + " " + pluralizedBottleForm() + " of " + beer()
+    }
+
+    private fun beer() = "beer"
+
+    private fun onWall() = "on the wall"
+
+    private fun pluralizedBottleForm() = if (isLastBeer()) "bottle" else "bottles"
+
+    private fun anglicizedBottleCount() = if (isAllOut()) "no more" else bottles.toString()
+
+    private fun goToTheStoreOrTakeOneDown(): String {
+        return if (isAllOut()) {
+            bottles = 99;
+            buyNewBeer()
+        } else {
+            val lyrics = drinkBeer()
+            bottles--
+            lyrics
+        }
+    }
+
+    private fun buyNewBeer() = "Go to the store and buy some more"
+
+    private fun drinkBeer() = "Take ${this.itOrOne()} down and pass it around"
+
+    private fun itOrOne() = if (isLastBeer()) "it" else "one"
+
+    private fun isAllOut() = this.bottles == 0
+
+    private fun isLastBeer() = this.bottles == 1
+
+    private fun capitalize(value: String): String {
+        return value[0].uppercase() + value.substring(1)
     }
 }
