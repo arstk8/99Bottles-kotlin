@@ -32,6 +32,11 @@ private class BottleNumber1(number: Int) : BottleNumber(number) {
     override fun pronoun() = "it"
 }
 
+private class BottleNumber6(number: Int) : BottleNumber(number) {
+    override fun container() = "six-pack"
+    override fun quantity() = "1"
+}
+
 private open class BottleNumber(private val number: Int) {
 
     override fun toString(): String {
@@ -50,6 +55,8 @@ private open class BottleNumber(private val number: Int) {
                 BottleNumber0(number)
             } else if (number == 1) {
                 BottleNumber1(number)
+            } else if (number == 6) {
+                BottleNumber6(number)
             } else {
                 BottleNumber(number)
             }
