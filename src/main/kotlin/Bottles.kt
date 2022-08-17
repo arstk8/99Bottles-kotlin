@@ -8,20 +8,10 @@ class Bottles {
     }
 
     private fun verse(number: Int): String {
-        return when (number) {
-            0 -> {
-                "No more bottles of beer on the wall, " +
-                        "no more bottles of beer.\n" +
-                        "Go to the store and buy some more, " +
-                        "99 bottles of beer on the wall."
-            }
-            else -> {
-                "$number ${container(number)} of beer on the wall, " +
-                        "$number ${container(number)} of beer.\n" +
-                        "Take ${pronoun(number - 1)} down and pass it around, " +
-                        "${quantity(number - 1)} ${container(number - 1)} of beer on the wall."
-            }
-        }
+        return "${capitalize(quantity(number))} ${container(number)} of beer on the wall, " +
+                "${quantity(number)} ${container(number)} of beer.\n" +
+                "${action(number)}, " +
+                "${quantity(successor(number))} ${container(successor(number))} of beer on the wall."
     }
 
     private fun container(number: Int): String {
@@ -33,7 +23,7 @@ class Bottles {
     }
 
     private fun pronoun(number: Int): String {
-        return if (number == 0) {
+        return if (number == 1) {
             "it"
         } else {
             "one"
@@ -46,5 +36,25 @@ class Bottles {
         } else {
             number.toString()
         }
+    }
+
+    private fun action(number: Int): String {
+        return if (number == 0) {
+            "Go to the store and buy some more"
+        } else {
+            "Take ${pronoun(number)} down and pass it around"
+        }
+    }
+
+    private fun successor(number: Int): Int {
+        return if (number == 0) {
+            99
+        } else {
+            number - 1
+        }
+    }
+
+    private fun capitalize(phrase: String): String {
+        return phrase[0].uppercase() + phrase.substring(1)
     }
 }
